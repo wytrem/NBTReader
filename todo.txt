@@ -1,0 +1,2 @@
+- Pouvoir ouvrir des fichiers qui ne sont que des parties de TagCompound
+- Pouvoir éditer les fichiers
