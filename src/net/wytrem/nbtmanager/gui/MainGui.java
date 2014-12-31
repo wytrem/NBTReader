@@ -44,10 +44,16 @@ public class MainGui extends JFrame
 				chooser.setDialogTitle("Choisissez le fichier NBT à lire...");
 				chooser.showOpenDialog(null);
 
-				loadFile(chooser.getSelectedFile());
+				
+				File choosen = chooser.getSelectedFile();
+				
+				if (choosen != null)
+				{
+					loadFile(choosen);
 
-				validate();
-				repaint();
+					validate();
+					repaint();
+				}
 			}
 		});
 
