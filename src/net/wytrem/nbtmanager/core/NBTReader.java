@@ -1,11 +1,7 @@
 package net.wytrem.nbtmanager.core;
 
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
 
 import net.wytrem.nbtmanager.gui.MainGui;
 
@@ -14,28 +10,32 @@ public class NBTReader
 {
 
 	/**
-	 * @param args
-	 * @throws IOException
-	 * @throws FileNotFoundException
+	 * Lance le programme et ouvre le fenêtre principale.
+	 * @param args Contient dans args[0] le nom du fichiers à ouvrir pour un accès direct.
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException
+	public static void main(String[] args)
 	{
-
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		}
-		catch (UnsupportedLookAndFeelException e)
-		{}
-		catch (ClassNotFoundException e)
-		{}
-		catch (InstantiationException e)
-		{}
-		catch (IllegalAccessException e)
-		{}
-
 		MainGui frame = new MainGui();
-
+		
+		if (args.length > 0)
+		{
+			String path = args[0];
+			
+			if (path != null && !path.isEmpty())
+			{
+				File file = new File(path);
+				
+				if (file.exists())
+				{
+					frame.loadFile(file);
+				}
+				else
+				{
+					System.out.println("Le fichier '" + file.getAbsolutePath() + "' n'existe pas. Ignoré.");
+				}
+			}
+		}
+		
 		frame.setVisible(true);
 	}
 
