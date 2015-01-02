@@ -41,7 +41,7 @@ public abstract class NBTBase
 			this.name = par1Str;
 		}
 	}
-
+	
 	/**
 	 * Sets the name for this tag and returns this for convenience.
 	 */
@@ -187,6 +187,12 @@ public abstract class NBTBase
 			default:
 				return "UNKNOWN";
 		}
+	}
+	
+	public abstract void setValue(Object value);
+	public String toModifyString()
+	{
+		return this.toString();
 	}
 
 	/**

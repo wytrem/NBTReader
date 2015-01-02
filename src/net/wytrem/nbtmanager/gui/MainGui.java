@@ -22,6 +22,8 @@ import net.wytrem.nbtmanager.nbt.NBTTagCompound;
 public class MainGui extends JFrame
 {
 	private static final long serialVersionUID = 1125045363621163546L;
+	
+	public static final String FRAME_NAME = "NBTManager";
 
 	/**
 	 * Barre de menu en haut de la fenêtre.
@@ -68,7 +70,7 @@ public class MainGui extends JFrame
 	 */
 	public MainGui()
 	{
-		super("NBTReader");
+		super(FRAME_NAME);
 		setLocationRelativeTo(null);
 		setSize(400, 400);
 
@@ -93,6 +95,7 @@ public class MainGui extends JFrame
 			public void actionPerformed(ActionEvent arg0)
 			{
 				saveTagTo(currentTree.getTag(), currentTree.getFile());
+				setTitle(FRAME_NAME);
 			}
 		});
 
@@ -174,7 +177,7 @@ public class MainGui extends JFrame
 			{
 				e.printStackTrace();
 
-				showErrorDialog("Erreur lors de la création du fichier : " + e.getMessage());
+				DialogUtils.showErrorDialog("Erreur lors de la création du fichier : " + e.getMessage());
 				return;
 			}
 
@@ -188,7 +191,7 @@ public class MainGui extends JFrame
 				{
 					e.printStackTrace();
 
-					showErrorDialog("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
+					DialogUtils.showErrorDialog("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
 				}
 			}
 			else
@@ -201,7 +204,7 @@ public class MainGui extends JFrame
 				{
 					e.printStackTrace();
 
-					showErrorDialog("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
+					DialogUtils.showErrorDialog("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
 				}
 			}
 		}
@@ -216,20 +219,10 @@ public class MainGui extends JFrame
 	public void loadFile(File loc)
 	{
 		getContentPane().removeAll();
-		currentTree = new NBTTree(loc);
+		currentTree = new NBTTree(loc, this);
 		getContentPane().add(currentTree.getComponent());
 
 		validate();
 		repaint();
-	}
-
-	/**
-	 * Affiche une boîte modale signalant une erreur.
-	 * 
-	 * @param text Le texte de l'erreur.
-	 */
-	public static void showErrorDialog(String text)
-	{
-		JOptionPane.showMessageDialog(null, text, "Erreur !", JOptionPane.ERROR_MESSAGE);
 	}
 }

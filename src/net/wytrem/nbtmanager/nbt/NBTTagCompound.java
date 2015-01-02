@@ -463,4 +463,9 @@ public class NBTTagCompound extends NBTBase
 	{
 		return par0NBTTagCompound.tagMap;
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+	}
 }

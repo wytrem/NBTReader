@@ -78,4 +78,13 @@ public class NBTTagShort extends NBTBase
 	{
 		return super.hashCode() ^ this.data;
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof Short)
+		{
+			this.data = (short) value;
+		}
+	}
 }

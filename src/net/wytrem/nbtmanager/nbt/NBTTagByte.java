@@ -78,4 +78,13 @@ public class NBTTagByte extends NBTBase
 	{
 		return super.hashCode() ^ this.data;
 	}
+
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof Byte)
+		{
+			this.data = (byte) value;
+		}
+	}
 }

@@ -78,4 +78,13 @@ public class NBTTagLong extends NBTBase
 	{
 		return super.hashCode() ^ (int) (this.data ^ this.data >>> 32);
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof Long)
+		{
+			this.data = (long) value;
+		}
+	}
 }

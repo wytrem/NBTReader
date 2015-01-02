@@ -83,4 +83,13 @@ public class NBTTagString extends NBTBase
 	{
 		return super.hashCode() ^ this.data.hashCode();
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof String)
+		{
+			this.data = (String) value;
+		}
+	}
 }

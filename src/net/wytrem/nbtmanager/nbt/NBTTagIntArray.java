@@ -62,7 +62,24 @@ public class NBTTagIntArray extends NBTBase
 
 	public String toString()
 	{
-		return "[" + this.intArray.length + " bytes]";
+		String s = "[";
+		
+		for (int i = 0; i < this.intArray.length; i++)
+		{
+			s += this.intArray[i];
+			
+			if (i != this.intArray.length -1)
+			{
+				s += ", ";
+			}
+		}
+		
+		s += "]";
+		
+		return s;
+		
+		
+//		return "[" + this.intArray.length + " bytes]";
 	}
 
 	/**
@@ -91,5 +108,14 @@ public class NBTTagIntArray extends NBTBase
 	public int hashCode()
 	{
 		return super.hashCode() ^ Arrays.hashCode(this.intArray);
+	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof int[])
+		{
+			this.intArray = (int[]) value;
+		}
 	}
 }

@@ -49,4 +49,10 @@ public class NBTTagEnd extends NBTBase
 	{
 		return new NBTTagEnd();
 	}
+	
+	@Override
+	@Deprecated
+	public void setValue(Object value)
+	{
+	}
 }

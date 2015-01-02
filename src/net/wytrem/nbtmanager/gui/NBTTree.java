@@ -2,17 +2,20 @@ package net.wytrem.nbtmanager.gui;
 
 
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import net.wytrem.nbtmanager.nbt.CompressedStreamTools;
 import net.wytrem.nbtmanager.nbt.NBTBase;
@@ -42,11 +45,13 @@ public class NBTTree
 	 * Le fichier qui lui correspont.
 	 */
 	private File file;
+	
+	public final MainGui parent;
 
 	/**
 	 * Crée un nouvel arbre de lecture du fichier NBT passé en argument.
 	 */
-	public NBTTree(File input)
+	public NBTTree(File input, MainGui mainGui)
 	{
 		file = input;
 
@@ -67,7 +72,7 @@ public class NBTTree
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			MainGui.showErrorDialog("Erreur lors de la lecture du fichier : " + e.getMessage());
+			DialogUtils.showErrorDialog("Erreur lors de la lecture du fichier : " + e.getMessage());
 		}
 
 		String name = tag.getName();
@@ -81,9 +86,38 @@ public class NBTTree
 		createNodes(top, tag);
 		tree = new JTree(top);
 
-		treeView = new JScrollPane(tree);
-	}
+		MouseListener ml = new MouseAdapter() {
+			public void mousePressed(MouseEvent e)
+			{
+				int selRow = tree.getRowForLocation(e.getX(), e.getY());
+				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selRow != -1)
+				{
+					if (SwingUtilities.isRightMouseButton(e))
+					{
+						doPopMenu(e, selRow, selPath);
+					}
+				}
+			}
+		};
+		
+		tree.addMouseListener(ml);
 
+		treeView = new JScrollPane(tree);
+		parent = mainGui;
+	}
+	
+	/**
+	 * Appelé lors du double clic sur un élément de l'arbre.
+	 * @param selRow
+	 * @param selPath
+	 */
+	protected void doPopMenu(MouseEvent e, int selRow, TreePath selPath)
+	{
+		NBTPopUpMenu menu = new NBTPopUpMenu(this, selPath);
+        menu.show(e.getComponent(), e.getX(), e.getY());
+	}
+	
 	/**
 	 * @return Le fichier correspondant à l'arbre affiché.
 	 */
@@ -99,14 +133,19 @@ public class NBTTree
 	{
 		return tag;
 	}
-	
 
 	/**
-	 * @return Le composant ({@link NBTTree#treeView}) qui devra être ajouté à la fenêtre.
+	 * @return Le composant ({@link NBTTree#treeView}) qui devra être ajouté à
+	 *         la fenêtre.
 	 */
 	public Component getComponent()
 	{
 		return treeView;
+	}
+	
+	public JTree getTree()
+	{
+		return tree;
 	}
 
 	/**
@@ -119,19 +158,15 @@ public class NBTTree
 			return;
 		}
 
-		Map<String, NBTBase> map = NBTTagCompound.getTagMap(tag);
-
-		Iterator<Entry<String, NBTBase>> iterator = map.entrySet().iterator();
+		Iterator<NBTBase> iterator = tag.getTags().iterator();
 
 		while (iterator.hasNext())
 		{
-			Entry<String, NBTBase> entry = iterator.next();
-
-			NBTBase base = entry.getValue();
+			NBTBase base = iterator.next();
 
 			if (base instanceof NBTTagCompound)
 			{
-				DefaultMutableTreeNode category = new DefaultMutableTreeNode(entry.getKey());
+				DefaultMutableTreeNode category = new DefaultMutableTreeNode(new NBTNode(base));
 
 				createNodes(category, (NBTTagCompound) base);
 
@@ -139,8 +174,13 @@ public class NBTTree
 			}
 			else
 			{
-				parent.add(new DefaultMutableTreeNode(entry.getKey() + " : " + base.toString()));
+				parent.add(new DefaultMutableTreeNode(new NBTNode(base)));
 			}
 		}
+	}
+	
+	public static String formatNodeName(NBTBase entry)
+	{
+		return entry.getName() + " : " + entry.toString();
 	}
 }

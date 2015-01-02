@@ -79,4 +79,13 @@ public class NBTTagDouble extends NBTBase
 		long var1 = Double.doubleToLongBits(this.data);
 		return super.hashCode() ^ (int) (var1 ^ var1 >>> 32);
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof Double)
+		{
+			this.data = (double) value;
+		}
+	}
 }

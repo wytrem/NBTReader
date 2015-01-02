@@ -78,4 +78,13 @@ public class NBTTagFloat extends NBTBase
 	{
 		return super.hashCode() ^ Float.floatToIntBits(this.data);
 	}
+	
+	@Override
+	public void setValue(Object value)
+	{
+		if (value instanceof Float)
+		{
+			this.data = (float) value;
+		}
+	}
 }

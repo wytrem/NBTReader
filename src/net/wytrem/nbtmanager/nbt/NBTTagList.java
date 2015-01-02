@@ -164,4 +164,10 @@ public class NBTTagList extends NBTBase
 	{
 		return super.hashCode() ^ this.tagList.hashCode();
 	}
+	
+	@Override
+	@Deprecated
+	public void setValue(Object value)
+	{
+	}
 }
